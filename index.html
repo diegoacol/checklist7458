@@ -523,11 +523,55 @@
             <button class="btn-pdf" onclick="window.print()">
                 <i class="fas fa-file-pdf"></i> Salvar Checklist em PDF
             </button>
+            <button class="btn-pdf" onclick="resetChecklist()" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; margin-top: 1rem; font-size: 0.9rem; padding: 0.8rem 2rem;">
+                <i class="fas fa-undo"></i> Resetar Checklist
+            </button>
             <footer>
                 &copy; 2024 Mamãe no Comando. Conteúdo exclusivo para alunas.
             </footer>
         </div>
     </div>
+
+    <script>
+        // Função para salvar o estado do checklist
+        function saveChecklist() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const states = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem('checklistData_7458', JSON.stringify(states));
+        }
+
+        // Função para carregar o estado salvo
+        function loadChecklist() {
+            const savedStates = localStorage.getItem('checklistData_7458');
+            if (savedStates) {
+                const states = JSON.parse(savedStates);
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach((cb, i) => {
+                    if (states[i] !== undefined) {
+                        cb.checked = states[i];
+                    }
+                });
+            }
+        }
+
+        // Função para resetar tudo
+        function resetChecklist() {
+            if (confirm('Deseja realmente limpar todas as marcações do checklist?')) {
+                localStorage.removeItem('checklistData_7458');
+                location.reload();
+            }
+        }
+
+        // Event listener para mudanças
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox') {
+                saveChecklist();
+            }
+        });
+
+        // Carrega ao iniciar
+        document.addEventListener('DOMContentLoaded', loadChecklist);
+    </script>
 
 </body>
 
